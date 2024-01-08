@@ -80,14 +80,18 @@ struct BoundingBox
     }
 };
 
+struct Component
+{
+    size_t area();
+    Point2f center();
+    BoundingBox bounding_box();
+    std::vector<Cell> Cells{};
+};
+
 struct ConnectedComponents
 {
-    static size_t component_area(const std::vector<Cell> &cluster);
-    static Point2f component_center(const std::vector<Cell> &cluster);
-    static BoundingBox component_bounding_box(const std::vector<Cell> &cluster);
-
     ComponentsMap Map;
-    std::vector<std::vector<Cell>> Components;
+    std::vector<Component> Components;
 };
 
 ConnectedComponents connected_components(const BinImg &binimg);

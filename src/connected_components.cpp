@@ -1,28 +1,28 @@
 #include "connected_components.hpp"
 #include <cassert>
-size_t ConnectedComponents::component_area(const std::vector<Cell> &component)
+size_t Component::area()
 {
-    return component.size();
+    return Cells.size();
 }
-Point2f ConnectedComponents::component_center(const std::vector<Cell> &component)
+Point2f Component::center()
 {
-    assert(component.size() > 0); // Valid component is never 0
+    assert(Cells.size() > 0); // Valid component is never 0
     size_t cr{0}, cc{0};
-    for (auto &cell : component)
+    for (auto &cell : Cells)
     {
         cr += cell.r;
         cc += cell.c;
     }
-    return Point2f{static_cast<float>(cc) / component.size(), static_cast<float>(cr) / component.size()};
+    return Point2f{static_cast<float>(cc) / Cells.size(), static_cast<float>(cr) / Cells.size()};
 }
 
-BoundingBox ConnectedComponents::component_bounding_box(const std::vector<Cell> &component)
+BoundingBox Component::bounding_box()
 {
     size_t minr = SIZE_MAX;
     size_t maxr = 0;
     size_t minc = SIZE_MAX;
     size_t maxc = 0;
-    for (Cell c : component)
+    for (Cell c : Cells)
     {
         if (c.r < minr)
             minr = c.r;
@@ -33,14 +33,14 @@ BoundingBox ConnectedComponents::component_bounding_box(const std::vector<Cell> 
         if (c.c > maxc)
             maxc = c.c;
     }
-    return BoundingBox{maxr + 1, minr, minc, maxc + 1};
+    return BoundingBox{maxr + 1, minr, minc, maxc + 1}; // Pixel pos is at top left corner, so compensate by adding 1.
 }
 
 void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
 {
     std::vector<Cell> stack{start};
     ComponentsMap &map = cc.Map;
-    std::vector<Cell> component{};
+    Component component{};
     while (!stack.empty())
     {
         Cell cell = stack.back();
@@ -54,7 +54,7 @@ void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
         }
 
         map.set(r, c, id);
-        component.push_back(cell);
+        component.Cells.push_back(cell);
         if (r > 0)
         {
             stack.push_back(Cell{r - 1, c});
@@ -81,9 +81,9 @@ void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
 }
 ConnectedComponents connected_components(const BinImg &binimg)
 {
-    ConnectedComponents cc{ComponentsMap(binimg.width(), binimg.height()), std::vector<std::vector<Cell>>{}};
+    ConnectedComponents cc{ComponentsMap(binimg.width(), binimg.height()), std::vector<Component>{}};
     ComponentsMap &map = cc.Map;
-    cc.Components.push_back(std::vector<Cell>());
+    cc.Components.push_back(Component{});
     size_t id = 1;
     for (size_t row{0}; row < binimg.height(); row++)
     {
@@ -96,7 +96,7 @@ ConnectedComponents connected_components(const BinImg &binimg)
             }
             else
             {
-                cc.Components.front().push_back({row, col});
+                cc.Components.front().Cells.push_back({row, col});
             }
         }
     }

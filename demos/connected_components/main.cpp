@@ -36,9 +36,9 @@ int main(int argc, char **argv)
     std::cout << "-----------------" << std::endl;
     for (size_t c{1}; c < cc.Components.size(); c++)
     {
-        Point2f center = ConnectedComponents::component_center(cc.Components.at(c));
-        BoundingBox bb = ConnectedComponents::component_bounding_box(cc.Components.at(c));
-        size_t area = ConnectedComponents::component_area(cc.Components.at(c));
+        Point2f center = cc.Components.at(c).center();
+        BoundingBox bb = cc.Components.at(c).bounding_box();
+        size_t area = cc.Components.at(c).area();
         std::cout << "Component: " << c << std::endl;
         std::cout << "Center: " << center << std::endl;
         std::cout << "BoundingBox: " << bb << std::endl;
