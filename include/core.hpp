@@ -1,13 +1,15 @@
 #pragma once
-
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <string_view>
 #include <vector>
 
 namespace fs = std::filesystem;
+
 struct rgb
 {
     uint8_t r, g, b;

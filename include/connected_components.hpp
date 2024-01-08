@@ -62,10 +62,10 @@ struct Cell
 
 struct Point2f
 {
-    float r, c;
+    float x, y;
     friend std::ostream &operator<<(std::ostream &os, const Point2f &pt)
     {
-        os << pt.r << ", " << pt.c;
+        os << pt.x << ", " << pt.y;
         return os;
     }
 };

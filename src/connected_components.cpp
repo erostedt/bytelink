@@ -13,7 +13,7 @@ Point2f ConnectedComponents::component_center(const std::vector<Cell> &component
         cr += cell.r;
         cc += cell.c;
     }
-    return Point2f{static_cast<float>(cr) / component.size(), static_cast<float>(cc) / component.size()};
+    return Point2f{static_cast<float>(cc) / component.size(), static_cast<float>(cr) / component.size()};
 }
 
 BoundingBox ConnectedComponents::component_bounding_box(const std::vector<Cell> &component)
@@ -33,7 +33,7 @@ BoundingBox ConnectedComponents::component_bounding_box(const std::vector<Cell> 
         if (c.c > maxc)
             maxc = c.c;
     }
-    return BoundingBox{maxr, minr, minc, maxc};
+    return BoundingBox{maxr + 1, minr, minc, maxc + 1};
 }
 
 void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
