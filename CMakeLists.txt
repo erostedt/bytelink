@@ -4,7 +4,7 @@ project(bytelink)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(DEMOS_PATH ./demos)
 set(SRC_PATH ./src)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
