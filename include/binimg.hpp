@@ -26,12 +26,12 @@ class BinImg
         }
     }
 
-    bool at(size_t row, size_t col) const
+    inline bool at(size_t row, size_t col) const
     {
         return m_data[row * m_width + col];
     }
 
-    void set(size_t row, size_t col, bool on)
+    inline void set(size_t row, size_t col, bool on)
     {
         m_data[row * m_width + col] = on;
     }
@@ -55,13 +55,12 @@ class BinImg
             uint32_t lum = (on) ? 255 : 0;
             file << lum << ' ' << lum << ' ' << lum << '\n';
         }
-
     }
-    size_t width() const
+    inline size_t width() const
     {
         return m_width;
     }
-    size_t height() const
+    inline size_t height() const
     {
         return m_height;
     }

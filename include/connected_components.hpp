@@ -11,12 +11,7 @@ class ComponentsMap
     ComponentsMap(size_t width, size_t height) : m_width(width), m_height(height)
     {
         m_map.reserve(width * height);
-        for (size_t i{0}; i < width * height; i++)
-        {
-            m_map.push_back(0);
-        }
-
-        //std::fill_n(std::back_inserter(m_map), width * height, 0);
+        std::fill_n(std::back_inserter(m_map), width * height, 0);
     }
     size_t at(size_t row, size_t col) const
     {
