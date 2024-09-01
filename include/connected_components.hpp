@@ -15,6 +15,8 @@ class ComponentsMap
         {
             m_map.push_back(0);
         }
+
+        //std::fill_n(std::back_inserter(m_map), width * height, 0);
     }
     size_t at(size_t row, size_t col) const
     {

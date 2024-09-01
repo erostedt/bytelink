@@ -1,11 +1,14 @@
 #pragma once
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <string_view>
 #include <vector>
+
+namespace fs = std::filesystem;
 
 class BinImg
 {
@@ -22,30 +25,37 @@ class BinImg
             m_data.push_back(false);
         }
     }
+
     bool at(size_t row, size_t col) const
     {
         return m_data[row * m_width + col];
     }
+
     void set(size_t row, size_t col, bool on)
     {
         m_data[row * m_width + col] = on;
     }
-    void save_as_ppm(std::string_view filepath)
+
+    void save_as_ppm(const fs::path& filepath)
     {
-        std::ofstream file(filepath.data());
-        if (!file.is_open())
+        std::ofstream file(filepath);
+        assert(file.is_open());
+
+        file << "P3\n" << m_width << ' ' << m_height << "\n255\n";
+
+        for (size_t y = 0; y < m_height; ++y)
         {
-            std::cout << "ERROR: could not open file" << filepath;
-            std::exit(1);
+            for (size_t x = 0; x < m_width-1; ++x)
+            {
+                bool on = at(x, y);
+                uint32_t lum = (on) ? 255 : 0;
+                file << lum << ' ' << lum << ' ' << lum << ' ';
+            }
+            bool on = at(m_width-1, y);
+            uint32_t lum = (on) ? 255 : 0;
+            file << lum << ' ' << lum << ' ' << lum << '\n';
         }
 
-        file << "P6\n" << m_width << ' ' << m_height << "\n255\n";
-
-        for (bool on : m_data)
-        {
-            uint8_t lum = (on) ? 255 : 0;
-            file << lum << lum << lum;
-        }
     }
     size_t width() const
     {

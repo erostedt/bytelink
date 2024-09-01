@@ -17,8 +17,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::string_view ppm_path{argv[1]};
-    std::vector<rgb> rgb_pixels{};
+    std::string_view ppm_path = argv[1];
+    std::vector<rgb> rgb_pixels;
     size_t width, height, maxval;
     if (!load_ppm(ppm_path, rgb_pixels, width, height, maxval))
     {
@@ -31,9 +31,9 @@ int main(int argc, char **argv)
     BinImg binimg(width, height, binary);
 
     ConnectedComponents cc = connected_components(binimg);
-    std::cout << "CC Map: " << std::endl;
-    std::cout << cc.Map << std::endl;
-    std::cout << "-----------------" << std::endl;
+    //std::cout << "CC Map: " << std::endl;
+    //std::cout << cc.Map << std::endl;
+    //std::cout << "-----------------" << std::endl;
     for (size_t c{1}; c < cc.Components.size(); c++)
     {
         Point2f center = cc.Components.at(c).center();

@@ -19,8 +19,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::string_view ppm_path{argv[1]};
-    std::vector<rgb> rgb_pixels{};
+    std::string_view ppm_path = argv[1];
+    std::vector<rgb> rgb_pixels;
     size_t width, height, maxval;
     if (!load_ppm(ppm_path, rgb_pixels, width, height, maxval))
     {
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     std::vector<uint8_t> grayscale = rgb2gray(rgb_pixels);
     std::vector<bool> binary = threshold(grayscale, 10);
     BinImg binimg(width, height, binary);
-    std::vector<std::vector<bool>> kernel = make_grid(7, 7);
+    const auto kernel = make_grid(7, 7);
     BinImg ei = eroded(binimg, kernel);
     BinImg di = dilated(binimg, kernel);
     BinImg ci = closed(binimg, kernel);

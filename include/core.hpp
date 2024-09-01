@@ -1,10 +1,12 @@
 #pragma once
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -19,26 +21,27 @@ static inline bool load_ppm(std::string_view path, std::vector<rgb> &out_pixels,
                             size_t &maxval)
 {
     fs::path ppm_path(path);
-    if (!fs::exists(ppm_path) || ppm_path.extension().string() != ".ppm")
-        return false;
+    assert(fs::exists(ppm_path) || ppm_path.extension().string() == ".ppm");
 
     std::ifstream file(ppm_path);
-    if (!file.is_open())
-        return false;
+    assert(file.is_open());
 
     std::string format;
     file >> format;
+    assert(format == "P3");
+
     file >> width;
     file >> height;
     file >> maxval;
-    size_t channels{3};
-    uint8_t r, g, b;
-    for (size_t i{0}; i < width * height * channels; i += channels)
+
+    const size_t channels = 3;
+    uint32_t r, g, b;
+    for (size_t i = 0; i < height * width * channels; i += channels)
     {
         file >> r;
         file >> g;
         file >> b;
-        out_pixels.push_back({r, g, b});
+        out_pixels.push_back({static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)});
     }
     return true;
 }
