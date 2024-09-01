@@ -26,14 +26,14 @@ class BinImg
         }
     }
 
-    inline bool at(size_t row, size_t col) const
+    inline bool at(size_t x, size_t y) const
     {
-        return m_data[row * m_width + col];
+        return m_data.at(y * m_width + x);
     }
 
-    inline void set(size_t row, size_t col, bool on)
+    inline void set(size_t x, size_t y, bool on)
     {
-        m_data[row * m_width + col] = on;
+        m_data[y * m_width + x] = on;
     }
 
     void save_as_ppm(const fs::path& filepath)

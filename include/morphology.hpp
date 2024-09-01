@@ -6,80 +6,89 @@
 #include <vector>
 
 using StrElem = std::vector<std::vector<bool>>;
-inline StrElem make_grid(size_t rows, size_t cols)
+inline StrElem make_grid(size_t width, size_t height)
 {
-    std::vector<std::vector<bool>> grid{};
-    for (size_t r{0}; r < rows; r++)
+    std::vector<std::vector<bool>> grid;
+    for (size_t y = 0; y < height; ++y)
     {
-        grid.push_back(std::vector<bool>(cols, true));
+        grid.push_back(std::vector<bool>(width, true));
     }
     return grid;
 }
 
 inline BinImg eroded(const BinImg &binimg, const StrElem &strelem)
 {
-    int s_rows = static_cast<int>(strelem.size());
-    int s_cols = static_cast<int>(strelem.at(0).size());
-    assert(s_rows % 2 == 1);
-    assert(s_cols % 2 == 1);
+    const int str_elem_height = static_cast<int>(strelem.size());
+    const int str_elem_width = static_cast<int>(strelem.at(0).size());
+    assert(str_elem_height % 2 == 1);
+    assert(str_elem_width % 2 == 1);
 
-    int i_rows = static_cast<int>(binimg.height());
-    int i_cols = static_cast<int>(binimg.width());
-    BinImg eroded_image(i_cols, i_rows);
-    for (int r{s_rows / 2}; r < i_rows - s_rows / 2; r++)
+
+    const auto erode = [&](int x, int y)
     {
-        for (int c{s_cols / 2}; c < i_cols - s_cols / 2; c++)
+        for (int dy = -str_elem_height / 2; dy <= str_elem_height / 2; dy++)
         {
-            bool flag = true;
-            for (int dr{-s_rows / 2}; dr <= s_rows / 2; dr++)
+            for (int dx = -str_elem_width / 2; dx <= str_elem_width / 2; dx++)
             {
-                for (int dc{-s_cols / 2}; dc <= s_cols / 2; dc++)
+                const int ix = x + dx;
+                const int iy = y + dy;
+                const int sx = str_elem_width / 2 + dx;
+                const int sy = str_elem_height / 2 + dy;
+                if (!binimg.at(ix, iy) && strelem.at(sy).at(sx))
                 {
-                    int ir = r + dr;
-                    int ic = c + dc;
-                    int sr = s_rows / 2 + dr;
-                    int sc = s_cols / 2 + dc;
-                    if (!binimg.at(ir, ic) && strelem.at(sr).at(sc))
-                    {
-                        flag = false;
-                    }
+                    return false;
                 }
             }
-            eroded_image.set(r, c, flag);
+        }
+        return true;
+    };
+
+    const int image_height = static_cast<int>(binimg.height());
+    const int image_width = static_cast<int>(binimg.width());
+    BinImg eroded_image(image_width, image_height);
+    for (int y = str_elem_height / 2; y < image_height - str_elem_height / 2; ++y)
+    {
+        for (int x = str_elem_width / 2; x < image_width - str_elem_width / 2; ++x)
+        {
+            eroded_image.set(x, y, erode(x, y));
         }
     }
     return eroded_image;
 }
 inline BinImg dilated(const BinImg &binimg, const StrElem &strelem)
 {
-    int s_rows = static_cast<int>(strelem.size());
-    int s_cols = static_cast<int>(strelem.at(0).size());
-    assert(s_rows % 2 == 1);
-    assert(s_cols % 2 == 1);
+    const int str_elem_height = static_cast<int>(strelem.size());
+    const int str_elem_width = static_cast<int>(strelem.at(0).size());
+    assert(str_elem_height % 2 == 1);
+    assert(str_elem_width % 2 == 1);
 
-    int i_rows = static_cast<int>(binimg.height());
-    int i_cols = static_cast<int>(binimg.width());
-    BinImg dilated_image(i_cols, i_rows);
-    for (int r{s_rows / 2}; r < i_rows - s_rows / 2; r++)
+    const auto dilate = [&](int x, int y)
     {
-        for (int c{s_cols / 2}; c < i_cols - s_cols / 2; c++)
+        for (int dy = -str_elem_height / 2; dy < str_elem_height / 2; dy++)
         {
-            bool flag = false;
-            for (int dr{-s_rows / 2}; dr < s_rows / 2; dr++)
+            for (int dx = -str_elem_width / 2; dx < str_elem_width / 2; dx++)
             {
-                for (int dc{-s_cols / 2}; dc < s_cols / 2; dc++)
+                const int ix = x + dx;
+                const int iy = y + dy;
+                const int sx = str_elem_width / 2 + dx;
+                const int sy = str_elem_height / 2 + dy;
+                if (binimg.at(ix, iy) && strelem.at(sy).at(sx))
                 {
-                    int ir = r + dr;
-                    int ic = c + dc;
-                    int sr = s_rows / 2 + dr;
-                    int sc = s_cols / 2 + dc;
-                    if (binimg.at(ir, ic) && strelem.at(sr).at(sc))
-                    {
-                        flag = true;
-                    }
+                    return true;
                 }
             }
-            dilated_image.set(r, c, flag);
+        }
+        return false;
+    };
+
+    const int image_height = static_cast<int>(binimg.height());
+    const int image_width = static_cast<int>(binimg.width());
+    BinImg dilated_image(image_width, image_height);
+    for (int y = str_elem_height / 2; y < image_height - str_elem_height / 2; ++y)
+    {
+        for (int x = str_elem_width / 2; x < image_width - str_elem_width / 2; ++x)
+        {
+            dilated_image.set(x, y, dilate(x, y));
         }
     }
     return dilated_image;
