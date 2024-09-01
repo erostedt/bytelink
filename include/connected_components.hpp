@@ -14,12 +14,12 @@ class ComponentsMap
         std::fill_n(std::back_inserter(m_map), width * height, 0);
     }
 
-    size_t& at(size_t x, size_t y)
+    size_t &at(size_t x, size_t y)
     {
         return m_map.at(y * m_width + x);
     }
 
-    const size_t& at(size_t x, size_t y) const
+    const size_t &at(size_t x, size_t y) const
     {
         return m_map.at(y * m_width + x);
     }
@@ -53,8 +53,7 @@ class ComponentsMap
     std::vector<size_t> m_map;
 };
 
-template<typename T>
-struct Point
+template <typename T> struct Point
 {
     T x, y;
     friend std::ostream &operator<<(std::ostream &os, const Point &pt)
@@ -124,7 +123,6 @@ struct ConnectedComponents
     std::vector<Component> Components;
 };
 
-
 inline void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
 {
     std::vector<Cell> stack{start};
@@ -182,17 +180,17 @@ inline void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents
 
 inline ConnectedComponents connected_components(const BinImg &binimg)
 {
-    ConnectedComponents cc{ComponentsMap(binimg.width(), binimg.height()), std::vector<Component>{}};
+    ConnectedComponents cc = {ComponentsMap(binimg.width(), binimg.height()), {}};
     ComponentsMap &map = cc.Map;
-    cc.Components.push_back(Component{});
+    cc.Components.push_back({});
     size_t id = 1;
     for (size_t y = 0; y < binimg.height(); ++y)
     {
-        for (size_t x = {0}; x < binimg.width(); ++x)
+        for (size_t x = 0; x < binimg.width(); ++x)
         {
             if (binimg.at(x, y) && map.at(x, y) == 0)
             {
-                dfs(Cell{x, y}, id, binimg, cc);
+                dfs({x, y}, id, binimg, cc);
                 id++;
             }
             else
@@ -202,6 +200,4 @@ inline ConnectedComponents connected_components(const BinImg &binimg)
         }
     }
     return cc;
-
 }
-
