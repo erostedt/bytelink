@@ -6,6 +6,8 @@ set(DEMOS_PATH ./demos)
 set(SRC_PATH ./src)
 set(CMAKE_CXX_STANDARD 23)
 
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
+
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 file(GLOB bytelink_demos ${DEMOS_PATH}/*)
@@ -13,4 +15,5 @@ foreach(bytelink_demo ${bytelink_demos})
   get_filename_component(demo_name ${bytelink_demo} NAME_WE)
   file(GLOB sources ${bytelink_demo}/*.cpp)
   add_executable(${demo_name} ${sources})
+  target_link_libraries(${demo_name} tbb)
 endforeach()
