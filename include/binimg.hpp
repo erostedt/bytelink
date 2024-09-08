@@ -1,69 +1,15 @@
 #pragma once
-#include <cassert>
-#include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
 #include <vector>
-
-namespace fs = std::filesystem;
 
 class BinImg
 {
   public:
-    BinImg(size_t width, size_t height, const std::vector<bool> &data) : m_width(width), m_height(height)
-    {
-        m_data = data;
-    }
-    BinImg(size_t width, size_t height) : m_width(width), m_height(height)
-    {
-        m_data.reserve(width * height);
-        for (size_t i{0}; i < width * height; i++)
-        {
-            m_data.push_back(false);
-        }
-    }
-
-    inline bool at(size_t x, size_t y) const
-    {
-        return m_data.at(y * m_width + x);
-    }
-
-    inline void set(size_t x, size_t y, bool on)
-    {
-        m_data[y * m_width + x] = on;
-    }
-
-    void save_as_ppm(const fs::path& filepath)
-    {
-        std::ofstream file(filepath);
-        assert(file.is_open());
-
-        file << "P3\n" << m_width << ' ' << m_height << "\n255\n";
-
-        for (size_t y = 0; y < m_height; ++y)
-        {
-            for (size_t x = 0; x < m_width-1; ++x)
-            {
-                bool on = at(x, y);
-                uint32_t lum = (on) ? 255 : 0;
-                file << lum << ' ' << lum << ' ' << lum << ' ';
-            }
-            bool on = at(m_width-1, y);
-            uint32_t lum = (on) ? 255 : 0;
-            file << lum << ' ' << lum << ' ' << lum << '\n';
-        }
-    }
-    inline size_t width() const
-    {
-        return m_width;
-    }
-    inline size_t height() const
-    {
-        return m_height;
-    }
+    BinImg(size_t width, size_t height, const std::vector<bool> &data);
+    BinImg(size_t width, size_t height);
+    bool at(size_t x, size_t y) const;
+    void set(size_t x, size_t y, bool on);
+    size_t width() const;
+    size_t height() const;
 
   private:
     size_t m_width{};

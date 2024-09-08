@@ -1,11 +1,13 @@
-#include "connected_components.hpp"
-#include "core.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
 #include <vector>
+
+#include "color.hpp"
+#include "connected_components.hpp"
+#include "io.hpp"
 
 int main(int argc, char **argv)
 {
@@ -31,9 +33,9 @@ int main(int argc, char **argv)
     BinImg binimg(width, height, binary);
 
     ConnectedComponents cc = connected_components(binimg);
-    //std::cout << "CC Map: " << std::endl;
-    //std::cout << cc.Map << std::endl;
-    //std::cout << "-----------------" << std::endl;
+    // std::cout << "CC Map: " << std::endl;
+    // std::cout << cc.Map << std::endl;
+    // std::cout << "-----------------" << std::endl;
     for (size_t c{1}; c < cc.Components.size(); c++)
     {
         Point2f center = cc.Components.at(c).center();

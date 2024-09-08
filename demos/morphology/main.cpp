@@ -1,7 +1,9 @@
 
 #include "binimg.hpp"
-#include "core.hpp"
+#include "color.hpp"
+#include "io.hpp"
 #include "morphology.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -32,13 +34,10 @@ int main(int argc, char **argv)
     std::vector<bool> binary = threshold(grayscale, 10);
     BinImg binimg(width, height, binary);
     const auto kernel = make_grid(7, 7);
-    BinImg ei = eroded(binimg, kernel);
-    BinImg di = dilated(binimg, kernel);
-    BinImg ci = closed(binimg, kernel);
-    BinImg oi = opened(binimg, kernel);
-    binimg.save_as_ppm("pre_morph.ppm");
-    ei.save_as_ppm("eroded.ppm");
-    di.save_as_ppm("dilated.ppm");
-    ci.save_as_ppm("closed.ppm");
-    oi.save_as_ppm("opened.ppm");
+
+    save_as_ppm(binimg, "pre_morph.ppm");
+    save_as_ppm(eroded(binimg, kernel), "eroded.ppm");
+    save_as_ppm(dilated(binimg, kernel), "dilated.ppm");
+    save_as_ppm(closed(binimg, kernel), "closed.ppm");
+    save_as_ppm(opened(binimg, kernel), "opened.ppm");
 }
