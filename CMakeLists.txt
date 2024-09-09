@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/third_party)
 file(GLOB sources ${SRC_PATH}/*.cpp)
 add_library(${PROJECT_NAME} ${sources})
 
