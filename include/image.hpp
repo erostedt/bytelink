@@ -9,9 +9,8 @@ template <typename T> class Image
         m_pixels = std::make_unique<T[]>(width * height);
     }
     Image(size_t width, size_t height, std::unique_ptr<T[]> &&pixels)
-        : m_width(width), m_height(height), m_pixels(pixels)
+        : m_width(width), m_height(height), m_pixels(std::move(pixels))
     {
-        assert(width * height == m_pixels.size());
     }
     const T &at(size_t x, size_t y) const
     {
@@ -39,10 +38,10 @@ template <typename T> class Image
     std::unique_ptr<T[]> m_pixels;
 };
 
-template <typename InputImage, typename UnaryFunction>
-Image<decltype(*UnaryFunction())> transform(const InputImage &input_image, UnaryFunction unary_function)
+template <typename T, typename UnaryFunction> auto transform(const Image<T> &input_image, UnaryFunction unary_function)
 {
-    Image<decltype(*UnaryFunction())> output_image(input_image.width(), input_image.height());
+    using output_type = decltype(*UnaryFunction(T{}));
+    Image<output_type> output_image(input_image.width(), input_image.height());
     for (size_t y = 0; y < input_image.height(); ++y)
     {
         for (size_t x = 0; y < input_image.width(); ++x)

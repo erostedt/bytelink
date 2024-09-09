@@ -20,17 +20,20 @@ int main(int argc, char **argv)
     }
 
     std::string_view ppm_path = argv[1];
+    auto image = load_image(ppm_path);
+
     std::vector<rgb> rgb_pixels;
-    size_t width, height, maxval;
-    if (!load_ppm(ppm_path, rgb_pixels, width, height, maxval))
+    for (size_t y = 0; y < image.height(); ++y)
     {
-        std::cout << "Invalid ppm-file." << std::endl;
-        return EXIT_FAILURE;
+        for (size_t x = 0; x < image.width(); ++x)
+        {
+            rgb_pixels.push_back(image.at(x, y));
+        }
     }
 
     std::vector<uint8_t> grayscale = rgb2gray(rgb_pixels);
     std::vector<bool> binary = threshold(grayscale, 10);
-    BinImg binimg(width, height, binary);
+    BinImg binimg(image.width(), image.height(), binary);
 
     ConnectedComponents cc = connected_components(binimg);
     // std::cout << "CC Map: " << std::endl;

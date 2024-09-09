@@ -2,38 +2,28 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <memory>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #include "binimg.hpp"
 #include "color.hpp"
+#include "image.hpp"
 
 namespace fs = std::filesystem;
 
-bool load_ppm(std::string_view path, std::vector<rgb> &out_pixels, size_t &width, size_t &height, size_t &maxval)
+Image<rgb> load_image(const fs::path &path)
 {
-    fs::path ppm_path(path);
-    assert(fs::exists(ppm_path) || ppm_path.extension().string() == ".ppm");
-
-    std::ifstream file(ppm_path);
-    assert(file.is_open());
-
-    std::string format;
-    file >> format;
-    assert(format == "P3");
-
-    file >> width;
-    file >> height;
-    file >> maxval;
-
-    const size_t channels = 3;
-    uint32_t r, g, b;
-    for (size_t i = 0; i < height * width * channels; i += channels)
-    {
-        file >> r;
-        file >> g;
-        file >> b;
-        out_pixels.push_back({static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)});
-    }
-    return true;
+    int width, height, components;
+    uint8_t *bytes = stbi_load(path.c_str(), &width, &height, &components, STBI_rgb);
+    assert(bytes != NULL);
+    size_t size = width * height;
+    std::unique_ptr<rgb[]> pixels = std::make_unique<rgb[]>(size);
+    memcpy(pixels.get(), bytes, size * sizeof(rgb));
+    Image<rgb> image(width, height, std::move(pixels));
+    free(bytes);
+    return image;
 }
 
 void save_as_ppm(const BinImg binary_image, const fs::path &filepath)
