@@ -44,7 +44,7 @@ BinImg eroded(const BinImg &binimg, const StrElem &strelem)
     {
         for (int x = str_elem_width / 2; x < image_width - str_elem_width / 2; ++x)
         {
-            eroded_image.set(x, y, erode(x, y));
+            eroded_image.at(x, y) =  erode(x, y);
         }
     }
     return eroded_image;
@@ -82,7 +82,7 @@ BinImg dilated(const BinImg &binimg, const StrElem &strelem)
     {
         for (int x = str_elem_width / 2; x < image_width - str_elem_width / 2; ++x)
         {
-            dilated_image.set(x, y, dilate(x, y));
+            dilated_image.at(x, y) = dilate(x, y);
         }
     }
     return dilated_image;

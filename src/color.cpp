@@ -1,11 +1,12 @@
 #include <vector>
 
 #include "color.hpp"
+#include "image.hpp"
 
-std::vector<uint8_t> rgb2gray(const std::vector<rgb> &pixels)
+std::vector<uint8_t> rgb2gray(const std::vector<RGB24> &pixels)
 {
     std::vector<uint8_t> grayscale;
-    for (const rgb &pixel : pixels)
+    for (const RGB24 &pixel : pixels)
     {
         grayscale.push_back((299u * static_cast<uint32_t>(pixel.r) + 587u * static_cast<uint32_t>(pixel.g) +
                              114u * static_cast<uint32_t>(pixel.b)) /

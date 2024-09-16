@@ -5,9 +5,12 @@
 #include <string_view>
 #include <vector>
 
+#define IMAGO_IMPLEMENTATION
+#include "image.hpp"
+
 #include "color.hpp"
 #include "connected_components.hpp"
-#include "io.hpp"
+
 
 int main(int argc, char **argv)
 {
@@ -22,7 +25,7 @@ int main(int argc, char **argv)
     std::string_view ppm_path = argv[1];
     auto image = load_image(ppm_path);
 
-    std::vector<rgb> rgb_pixels;
+    std::vector<RGB24> rgb_pixels;
     for (size_t y = 0; y < image.height(); ++y)
     {
         for (size_t x = 0; x < image.width(); ++x)
@@ -33,12 +36,12 @@ int main(int argc, char **argv)
 
     std::vector<uint8_t> grayscale = rgb2gray(rgb_pixels);
     std::vector<bool> binary = threshold(grayscale, 10);
-    BinImg binimg(image.width(), image.height(), binary);
+
+    auto bins = std::make_unique<bool[]>(binary.size());
+    std::copy(binary.begin(), binary.end(), bins.get());
+    BinImg binimg(image.width(), image.height(), std::move(bins));
 
     ConnectedComponents cc = connected_components(binimg);
-    // std::cout << "CC Map: " << std::endl;
-    // std::cout << cc.Map << std::endl;
-    // std::cout << "-----------------" << std::endl;
     for (size_t c{1}; c < cc.Components.size(); c++)
     {
         Point2f center = cc.Components.at(c).center();

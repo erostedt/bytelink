@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
+#include <iostream>
 
-#include "binimg.hpp"
+#include "image.hpp"
 
 template <typename T> struct Point
 {
