@@ -16,6 +16,7 @@ template <typename T> struct Point
 
 using Point2f = Point<float>;
 using Cell = Point<size_t>;
+using ComponentsMap = Image<size_t>;
 
 struct BoundingBox
 {
@@ -29,22 +30,6 @@ struct Component
     Point2f center();
     BoundingBox bounding_box();
     std::vector<Cell> Cells{};
-};
-
-class ComponentsMap
-{
-  public:
-    ComponentsMap(size_t width, size_t height);
-    size_t &at(size_t x, size_t y);
-    const size_t &at(size_t x, size_t y) const;
-    size_t width() const;
-    size_t height() const;
-    friend std::ostream &operator<<(std::ostream &os, const ComponentsMap &map);
-
-  private:
-    size_t m_width;
-    size_t m_height;
-    std::vector<size_t> m_map;
 };
 
 struct ConnectedComponents

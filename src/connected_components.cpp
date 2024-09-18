@@ -3,45 +3,6 @@
 
 #include "connected_components.hpp"
 
-ComponentsMap::ComponentsMap(size_t width, size_t height) : m_width(width), m_height(height)
-{
-    m_map.reserve(width * height);
-    std::fill_n(std::back_inserter(m_map), width * height, 0);
-}
-
-size_t &ComponentsMap::at(size_t x, size_t y)
-{
-    return m_map.at(y * m_width + x);
-}
-
-const size_t &ComponentsMap::at(size_t x, size_t y) const
-{
-    return m_map.at(y * m_width + x);
-}
-
-size_t ComponentsMap::width() const
-{
-    return m_width;
-}
-
-size_t ComponentsMap::height() const
-{
-    return m_height;
-}
-
-std::ostream &operator<<(std::ostream &os, const ComponentsMap &map)
-{
-    for (size_t y = 0; y < map.height(); ++y)
-    {
-        for (size_t x = 0; x < map.width(); ++x)
-        {
-            os << map.at(x, y) << " ";
-        }
-        os << std::endl;
-    }
-    return os;
-}
-
 std::ostream &operator<<(std::ostream &os, const BoundingBox &box)
 {
     os << "[" << box.left << ", " << box.right << "] x [" << box.top << ", " << box.bottom << "]";
@@ -143,7 +104,7 @@ void dfs(Cell start, size_t id, const BinImg &binimg, ConnectedComponents &cc)
 
 ConnectedComponents connected_components(const BinImg &binimg)
 {
-    ConnectedComponents cc = {ComponentsMap(binimg.width(), binimg.height()), {}};
+    ConnectedComponents cc = {ComponentsMap(binimg.width(), binimg.height(), 0), {}};
     ComponentsMap &map = cc.Map;
     cc.Components.push_back({});
     size_t id = 1;
