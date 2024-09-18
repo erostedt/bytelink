@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     {
         std::cout << "Invalid usage." << std::endl;
         std::cout << "Intended usage:" << std::endl;
-        std::cout << "  ./connected_components ppm-file" << std::endl;
+        std::cout << "  ./connected_components image_path" << std::endl;
         return EXIT_FAILURE;
     }
 
