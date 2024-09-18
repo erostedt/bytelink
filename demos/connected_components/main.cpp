@@ -5,7 +5,7 @@
 #include <string_view>
 
 #include "connected_components.hpp"
-#include "image.hpp"
+#include "imago.hpp"
 
 int main(int argc, char **argv)
 {
@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 
     std::string_view ppm_path = argv[1];
     const auto image = load_image(ppm_path);
-    const auto binimg = convert_image(image, [](const RGB24 rgb) { return rgb2gray(rgb) > 10; });
+    const auto binimg = convert_image(image, [](const RGBA32 rgba) { return rgba_to_gray(rgba) > 10; });
 
     ConnectedComponents cc = connected_components(binimg);
     for (size_t c = 1; c < cc.Components.size(); c++)

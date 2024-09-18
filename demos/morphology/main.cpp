@@ -4,13 +4,13 @@
 #include <iostream>
 #include <string_view>
 
-#include "image.hpp"
+#include "imago.hpp"
 #include "morphology.hpp"
 
-const RGB24 BLACK = {0, 0, 0};
-const RGB24 WHITE = {255, 255, 255};
+const RGBA32 BLACK = {0, 0, 0, 255};
+const RGBA32 WHITE = {255, 255, 255, 255};
 
-Image<RGB24> colorize(const BinImg &binimg)
+Image<RGBA32> colorize(const BinImg &binimg)
 {
     return convert_image(binimg, [](const bool on) { return on ? WHITE : BLACK; });
 }
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     const auto image = load_image(ppm_path);
 
     const auto kernel = make_grid(7, 7);
-    const auto binimg = convert_image(image, [](const RGB24 rgb) { return rgb2gray(rgb) > 10; });
+    const auto binimg = convert_image(image, [](const RGBA32 rgba) { return rgba_to_gray(rgba) > 10; });
 
     save_image(colorize(binimg), "pre_morph.png");
     save_image(colorize(eroded(binimg, kernel)), "eroded.png");

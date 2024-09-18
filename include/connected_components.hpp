@@ -1,8 +1,8 @@
 #pragma once
-#include <vector>
 #include <iostream>
+#include <vector>
 
-#include "image.hpp"
+#include "imago.hpp"
 
 template <typename T> struct Point
 {
