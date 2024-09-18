@@ -1,13 +1,11 @@
 #define IMAGO_IMPLEMENTATION
-#include "image.hpp"
-
-#include "color.hpp"
-#include "morphology.hpp"
-
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
+
+#include "image.hpp"
+#include "morphology.hpp"
 
 const RGB24 BLACK = {0, 0, 0};
 const RGB24 WHITE = {255, 255, 255};
@@ -28,10 +26,10 @@ int main(int argc, char **argv)
     }
 
     std::string_view ppm_path = argv[1];
-    auto image = load_image(ppm_path);
+    const auto image = load_image(ppm_path);
 
     const auto kernel = make_grid(7, 7);
-    auto binimg = convert_image(image, [](const RGB24 rgb) { return rgb2gray(rgb) > 10; });
+    const auto binimg = convert_image(image, [](const RGB24 rgb) { return rgb2gray(rgb) > 10; });
 
     save_image(colorize(binimg), "pre_morph.png");
     save_image(colorize(eroded(binimg, kernel)), "eroded.png");
