@@ -119,17 +119,17 @@ template <typename T> class Image
         return Iterator(m_pixels.get() + size());
     }
 
-    const Iterator cend() const
+    Iterator cend() const
     {
         return Iterator(m_pixels.get() + size());
     }
 
-    const T *const data() const
+    T *data() const
     {
         return m_pixels.get();
     }
 
-    const T &at(size_t x, size_t y) const
+    T &at(size_t x, size_t y) const
     {
         return m_pixels[y * m_width + x];
     }
@@ -173,7 +173,14 @@ using BinImg = Image<bool>;
 
 #ifdef IMAGO_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #include "stb_image.h"
+#include "stb_image_write.h"
+#pragma GCC diagnostic pop
+
 inline Image<RGB24> load_image(const fs::path &path)
 {
     int width, height, components;
@@ -187,8 +194,6 @@ inline Image<RGB24> load_image(const fs::path &path)
     return image;
 }
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 inline bool save_image(const Image<RGB24> &image, const fs::path &path)
 {
     const size_t component_count = 3;

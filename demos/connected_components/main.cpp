@@ -11,7 +11,6 @@
 #include "color.hpp"
 #include "connected_components.hpp"
 
-
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -23,23 +22,8 @@ int main(int argc, char **argv)
     }
 
     std::string_view ppm_path = argv[1];
-    auto image = load_image(ppm_path);
-
-    std::vector<RGB24> rgb_pixels;
-    for (size_t y = 0; y < image.height(); ++y)
-    {
-        for (size_t x = 0; x < image.width(); ++x)
-        {
-            rgb_pixels.push_back(image.at(x, y));
-        }
-    }
-
-    std::vector<uint8_t> grayscale = rgb2gray(rgb_pixels);
-    std::vector<bool> binary = threshold(grayscale, 10);
-
-    auto bins = std::make_unique<bool[]>(binary.size());
-    std::copy(binary.begin(), binary.end(), bins.get());
-    BinImg binimg(image.width(), image.height(), std::move(bins));
+    const auto image = load_image(ppm_path);
+    const auto binimg = convert_image(image, [](const RGB24 rgb) { return rgb2gray(rgb) > 10; });
 
     ConnectedComponents cc = connected_components(binimg);
     for (size_t c{1}; c < cc.Components.size(); c++)
