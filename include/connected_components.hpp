@@ -1,40 +1,25 @@
 #pragma once
-#include <iostream>
 #include <vector>
 
 #include "imago.hpp"
 #include "binimg.hpp"
+#include "component.hpp"
 
-template <typename T> struct Point
-{
-    T x, y;
-    friend std::ostream &operator<<(std::ostream &os, const Point &pt)
-    {
-        os << pt.x << ", " << pt.y;
-        return os;
-    }
-};
-
-using Point2f = Point<float>;
-using Cell = Point<size_t>;
 using ComponentsMap = Image<size_t>;
 
-struct BoundingBox
+class ConnectedComponents
 {
-    size_t bottom, top, left, right;
-    friend std::ostream &operator<<(std::ostream &os, const BoundingBox &box);
-};
+public:
+    ConnectedComponents(size_t width, size_t height);
+    void add_component(Component &&component);
+    void add_cell_to_background(Cell cell);
+    size_t& id(size_t x, size_t y);
+    inline const std::vector<Component>& components() const
+    {
+        return Components;
+    }
 
-struct Component
-{
-    size_t area();
-    Point2f center();
-    BoundingBox bounding_box();
-    std::vector<Cell> Cells{};
-};
-
-struct ConnectedComponents
-{
+private:
     ComponentsMap Map;
     std::vector<Component> Components;
 };

@@ -22,11 +22,12 @@ int main(int argc, char **argv)
     const auto binimg = convert_image(image, [](const RGBA32 rgba) { return rgba_to_gray(rgba) > 10; });
 
     ConnectedComponents cc = connected_components(binimg);
-    for (size_t c = 1; c < cc.Components.size(); c++)
+    const auto& components = cc.components();
+    for (size_t c = 1; c < components.size(); c++)
     {
-        Point2f center = cc.Components.at(c).center();
-        BoundingBox bb = cc.Components.at(c).bounding_box();
-        size_t area = cc.Components.at(c).area();
+        Point2f center = components.at(c).center();
+        BoundingBox bb = components.at(c).bounding_box();
+        size_t area = components.at(c).area();
         std::cout << "Component: " << c << std::endl;
         std::cout << "Center: " << center << std::endl;
         std::cout << "BoundingBox: " << bb << std::endl;

@@ -1,5 +1,4 @@
 #define IMAGO_IMPLEMENTATION
-#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
