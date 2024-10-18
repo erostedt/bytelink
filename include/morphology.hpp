@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "imago.hpp"
+#include "binimg.hpp"
 
 using StrElem = std::vector<std::vector<bool>>;
 StrElem make_grid(size_t width, size_t height);

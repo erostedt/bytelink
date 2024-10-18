@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "imago.hpp"
+#include "binimg.hpp"
 
 template <typename T> struct Point
 {
@@ -17,7 +18,6 @@ template <typename T> struct Point
 using Point2f = Point<float>;
 using Cell = Point<size_t>;
 using ComponentsMap = Image<size_t>;
-using BinImg = Image<bool>;
 
 struct BoundingBox
 {
