@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     const auto binimg = convert_image(image, [](const RGBA32 rgba) { return rgba_to_gray(rgba) > 10; });
 
     ConnectedComponents cc = connected_components(binimg);
-    const auto& components = cc.components();
+    const auto &components = cc.components();
     for (size_t c = 1; c < components.size(); c++)
     {
         Point2f center = components.at(c).center();

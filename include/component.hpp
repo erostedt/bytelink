@@ -3,15 +3,14 @@
 
 #include "geometry.hpp"
 
-
 class Component
 {
-public:
+  public:
     void add_cell(Cell cell);
     size_t area() const;
     Point2f center() const;
     BoundingBox bounding_box() const;
 
-private:
+  private:
     std::vector<Cell> Cells;
 };

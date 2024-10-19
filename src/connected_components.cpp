@@ -2,8 +2,7 @@
 
 #include "connected_components.hpp"
 
-ConnectedComponents::ConnectedComponents(size_t width, size_t height)
-    : Map(ComponentsMap(width, height, 0))
+ConnectedComponents::ConnectedComponents(size_t width, size_t height) : Map(ComponentsMap(width, height, 0))
 {
 }
 
@@ -12,11 +11,10 @@ void ConnectedComponents::add_component(Component &&component)
     Components.push_back(component);
 }
 
-size_t& ConnectedComponents::id(size_t x, size_t y)
+size_t &ConnectedComponents::id(size_t x, size_t y)
 {
     return Map.at(x, y);
 }
-
 
 void ConnectedComponents::add_cell_to_background(Cell cell)
 {
